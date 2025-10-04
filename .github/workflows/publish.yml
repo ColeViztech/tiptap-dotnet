@@ -28,7 +28,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
     - name: Pack
-      run: dotnet pack src/Tiptap.Core/Tiptap.Core.csproj -c Release -o out
+      run: dotnet pack src/Tiptap.Core/Tiptap.Core.csproj -c Release -o out /p:Version=${GITHUB_REF#refs/tags/v}
 
     - name: Publish to NuGet
       run: dotnet nuget push "out/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
