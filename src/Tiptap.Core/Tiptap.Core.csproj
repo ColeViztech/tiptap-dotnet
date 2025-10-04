@@ -8,7 +8,6 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Tiptap.NET</PackageId>
     <PackageTags>tiptap;editor;richtext;prosemirror;dotnet</PackageTags>
-    <Version>0.1.0</Version>
     <Authors>Cole Miller</Authors>
     <Company>Viztech</Company>
     <Description>Tiptap for .NET, a headless rich-text editor toolkit for .NET.</Description>
