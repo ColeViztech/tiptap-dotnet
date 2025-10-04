@@ -1,0 +1,41 @@
+using Tiptap.Core.Core;
+using Tiptap.Core.Models;
+using Tiptap.Core.Utils;
+
+namespace Tiptap.Core.Nodes;
+
+public class ListItem : Node
+{
+    public ListItem(IDictionary<string, object?>? options = null)
+        : base(options)
+    {
+    }
+
+    public override string Name => "listItem";
+
+    protected override IDictionary<string, object?> AddOptions()
+    {
+        return new Dictionary<string, object?>
+        {
+            ["HTMLAttributes"] = new Dictionary<string, object?>(),
+        };
+    }
+
+    public override IEnumerable<ParseRule> ParseHTML(object? context = null)
+    {
+        yield return new ParseRule
+        {
+            Tag = "li",
+        };
+    }
+
+    public override object? RenderHTML(ProseMirrorNode node)
+    {
+        return new object?[]
+        {
+            "li",
+            HtmlUtilities.MergeAttributes(this.GetHtmlAttributes()),
+            0,
+        };
+    }
+}
