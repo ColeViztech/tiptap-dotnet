@@ -1,7 +1,7 @@
 # Tiptap for .NET
 
 [![NuGet](https://img.shields.io/nuget/v/Tiptap.NET.svg)](https://www.nuget.org/packages/Tiptap.NET)
-[![Build](https://github.com/ColeViztech/tiptap-dotnet/actions/workflows/build.yml/badge.svg)](https://github.com/ColeViztech/tiptap-dotnet/actions)
+[![Build & Unit Tests](https://github.com/ColeViztech/tiptap-dotnet/actions/workflows/ci.yml/badge.svg)](https://github.com/ColeViztech/tiptap-dotnet/actions/workflows/ci.yml)
 
 This repository hosts a .NET Conversion of the [tiptap-php](https://github.com/ueberdosis/tiptap-php), It would not have been possible without them. It targets .NET 8+ and mirrors the API surface of the original PHP package so that server-side code can parse, sanitize, and transform Tiptap content without relying on Node.js. The implementation now ships with an automated test suite (`dotnet test`) that covers the HTML, JSON, and text serializers as well as the extension options that tend to drift between ecosystems.
 
