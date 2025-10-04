@@ -8,17 +8,20 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Tiptap.NET</PackageId>
     <PackageTags>tiptap;editor;richtext;prosemirror;dotnet</PackageTags>
-    <Version>1.0.0</Version>
+    <Version>0.1.0</Version>
     <Authors>Cole Miller</Authors>
     <Company>Viztech</Company>
-    <Description>C# port of tiptap-php, a headless rich-text editor toolkit for .NET.</Description>
+    <Description>Tiptap for .NET, a headless rich-text editor toolkit for .NET.</Description>
+    <Summary>A .NET port of Tiptap (via tiptap-php), providing ProseMirror-based parsing, serialization, and sanitization.</Summary>
     <PackageProjectUrl>https://github.com/ColeViztech/tiptap-dotnet</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ColeViztech/tiptap-dotnet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NeutralLanguage>en</NeutralLanguage>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,8 +29,9 @@
     <PackageReference Include="System.Text.Json" Version="9.0.9" />
   </ItemGroup>
 
-  <!-- Make sure README is included in NuGet -->
+  <!-- README and icon -->
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="" />
+    <None Include="..\..\icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>
