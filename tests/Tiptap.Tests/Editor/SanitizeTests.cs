@@ -1,3 +1,5 @@
+using System;
+using System.Text.Json;
 using Tiptap.Core.Models;
 using Tiptap.Tests;
 using EditorClass = Tiptap.Core.Editor;
@@ -21,13 +23,16 @@ public class SanitizeTests
     [Fact]
     public void UnknownNodesAreRemovedFromDocumentUsingSanitize()
     {
-        var document = CreateFooDocument();
-
         var result = new EditorClass()
-            .Sanitize(document) as ProseMirrorDocument;
+            .Sanitize(CreateFooDocument()) as ProseMirrorDocument;
 
         Assert.NotNull(result);
-        Assert.Equal(JsonTestHelper.Serialize(document), JsonTestHelper.Serialize(result!));
+        Assert.Equal("doc", result!.Type);
+        Assert.NotNull(result.Content);
+        Assert.Single(result.Content!);
+        var textNode = result.Content![0];
+        Assert.Equal("text", textNode.Type);
+        Assert.Equal("Example Text", textNode.Text);
     }
 
     [Fact]
@@ -65,13 +70,102 @@ public class SanitizeTests
     [Fact]
     public void UnknownNodesAreRemovedFromJsonUsingSanitize()
     {
-        var document = CreateFooDocument();
-        var json = JsonTestHelper.Serialize(document);
+        var json = JsonTestHelper.Serialize(CreateFooDocument());
 
-        var result = new EditorClass()
+        var sanitized = new EditorClass()
             .Sanitize(json) as string;
 
-        Assert.Equal(json, result);
+        Assert.NotNull(sanitized);
+        Assert.DoesNotContain("foo", sanitized!, StringComparison.OrdinalIgnoreCase);
+
+        var parsed = JsonSerializer.Deserialize<ProseMirrorDocument>(sanitized!);
+        Assert.NotNull(parsed);
+        Assert.NotNull(parsed!.Content);
+        Assert.Single(parsed.Content!);
+        Assert.Equal("text", parsed.Content![0].Type);
+        Assert.Equal("Example Text", parsed.Content![0].Text);
+    }
+
+    [Fact]
+    public void JsonInputWithJavascriptHrefIsSanitized()
+    {
+        var maliciousJson = """
+        {
+            "type": "doc",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Click me",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": { "href": "javascript:alert(1)" }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+        """;
+
+        var sanitized = new EditorClass()
+            .Sanitize(maliciousJson) as string;
+
+        Assert.NotNull(sanitized);
+        Assert.DoesNotContain("javascript:", sanitized!, StringComparison.OrdinalIgnoreCase);
+
+        var parsed = JsonSerializer.Deserialize<ProseMirrorDocument>(sanitized!);
+        Assert.NotNull(parsed);
+        var textNode = parsed!.Content?[0].Content?[0];
+        Assert.NotNull(textNode);
+        Assert.True(textNode!.Marks == null || textNode.Marks.Count == 0);
+    }
+
+    [Fact]
+    public void DocumentInputWithJavascriptHrefIsSanitized()
+    {
+        var document = new ProseMirrorDocument
+        {
+            Type = "doc",
+            Content =
+            [
+                new ProseMirrorNode
+                {
+                    Type = "paragraph",
+                    Content =
+                    [
+                        new ProseMirrorNode
+                        {
+                            Type = "text",
+                            Text = "Click me",
+                            Marks =
+                            [
+                                new ProseMirrorMark
+                                {
+                                    Type = "link",
+                                    Attrs = new Dictionary<string, object?>
+                                    {
+                                        ["href"] = "javascript:alert(1)",
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var sanitized = new EditorClass()
+            .Sanitize(document) as ProseMirrorDocument;
+
+        Assert.NotNull(sanitized);
+        var textNode = sanitized!.Content?[0].Content?[0];
+        Assert.NotNull(textNode);
+        Assert.True(textNode!.Marks == null || textNode.Marks.Count == 0);
     }
 
     private static ProseMirrorDocument CreateFooDocument()

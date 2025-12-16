@@ -97,11 +97,19 @@ public class Editor
             return SetContent((object?)null).GetDocument();
         }
 
-        return DetermineContentKind(value) switch
+        var kind = DetermineContentKind(value);
+
+        // Force every input type through the HTML pipeline so schema parse rules
+        // and the DOM parser strip anything that is not allowed by the schema.
+        SetContent(value);
+        var normalizedHtml = GetHTML();
+        SetContent(normalizedHtml);
+
+        return kind switch
         {
-            ContentKind.Html => SetContent(value).GetHTML(),
-            ContentKind.Json => SetContent(value).GetJSON(),
-            ContentKind.Document => SetContent(value).GetDocument(),
+            ContentKind.Html => GetHTML(),
+            ContentKind.Json => GetJSON(),
+            ContentKind.Document => GetDocument(),
             _ => throw new InvalidOperationException("Unsupported content type."),
         };
     }

@@ -174,19 +174,63 @@ var text = new Editor()
 
 ### Sanitize content
 
-`Sanitize` parses the value with the configured schema and returns it in the same format. Invalid nodes and marks are stripped as part of schema application:
+`Sanitize` enforces the editor schema as a security boundary and returns the result
+in the same format as the input (HTML, JSON, or `ProseMirrorDocument`).
+
+All inputs are normalized by round-tripping through the HTML parser and schema,
+ensuring that unsupported nodes, marks, and unsafe attributes are removed
+consistently across formats.
+
+This prevents bypasses where malicious content could survive in JSON or document
+inputs but not in HTML.
 
 ```csharp
 using Tiptap.Core;
 
 var editor = new Editor();
 
+// HTML input
 var sanitized = editor.Sanitize("<p onclick=\"alert(1)\">Hello</p>");
-// sanitized == "<p>Hello</p>"
+// "<p>Hello</p>"
 
-var sanitizedJson = editor.Sanitize("{\"type\":\"doc\",\"content\":[]}");
-// sanitizedJson == "{\"type\":\"doc\",\"content\":[]}" (unchanged JSON)
+// JSON input (unsafe attributes are stripped)
+var sanitizedJson = editor.Sanitize(@"
+{
+  ""type"": ""doc"",
+  ""content"": [
+    {
+      ""type"": ""paragraph"",
+      ""content"": [
+        {
+          ""type"": ""text"",
+          ""text"": ""Click"",
+          ""marks"": [
+            { ""type"": ""link"", ""attrs"": { ""href"": ""javascript:alert(1)"" } }
+          ]
+        }
+      ]
+    }
+  ]
+}");
+
+// Resulting JSON (link mark removed due to unsafe href)
+/// {
+///   "type": "doc",
+///   "content": [
+///     {
+///       "type": "paragraph",
+///       "content": [
+///         { "type": "text", "text": "Click" }
+///       ]
+///     }
+///   ]
+/// }
 ```
+
+> **Note**  
+> `Sanitize` may remove unsupported or unsafe content in order to guarantee safety.  
+> If you need non-destructive parsing or editing behavior, use `SetContent` instead.
+
 
 ### Modifying the content
 
