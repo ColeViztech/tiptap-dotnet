@@ -3,13 +3,14 @@
 [![NuGet](https://img.shields.io/nuget/v/Tiptap.NET.svg)](https://www.nuget.org/packages/Tiptap.NET)
 [![Build & Unit Tests](https://github.com/ColeViztech/tiptap-dotnet/actions/workflows/ci.yml/badge.svg)](https://github.com/ColeViztech/tiptap-dotnet/actions/workflows/ci.yml)
 
-This repository hosts a .NET Conversion of the [tiptap-php](https://github.com/ueberdosis/tiptap-php), It would not have been possible without them. It targets .NET 8+ and mirrors the API surface of the original PHP package so that server-side code can parse, sanitize, and transform Tiptap content without relying on Node.js. The implementation now ships with an automated test suite (`dotnet test`) that covers the HTML, JSON, and text serializers as well as the extension options that tend to drift between ecosystems.
+This repository hosts a .NET Conversion of the [tiptap-php](https://github.com/ueberdosis/tiptap-php), It would not have been possible without them. It targets .NET 8 and .NET 10 and mirrors the API surface of the original PHP package so that server-side code can parse, sanitize, and transform Tiptap content without relying on Node.js. The implementation now ships with an automated test suite (`dotnet test`) that covers the HTML, JSON, and text serializers as well as the extension options that tend to drift between ecosystems.
 
 ## Repository layout
 
 ```
-Tiptap.sln               # Solution that includes the core library project
+Tiptap.sln               # Solution that includes the core library and tests
 src/Tiptap.Core/         # C# source for the Tiptap.Core class library
+tests/Tiptap.Tests/      # xUnit coverage for parsing, serialization, and sanitization
 ```
 
 ## Installation
@@ -25,10 +26,10 @@ The library is distributed as the `Tiptap.Core` class library that you can refer
 # Clone or add the git submodule
 git clone https://github.com/ColeViztech/tiptap-dotnet.git
 
-# Restore dependencies and build (requires the .NET 8 SDK)
+# Restore dependencies and build (requires the .NET 10 SDK)
 cd tiptap-dotnet
 dotnet restore
-dotnet build src/Tiptap.Core/Tiptap.Core.csproj
+dotnet build
 ```
 
 Add the project to your own solution with a project reference:
@@ -394,7 +395,7 @@ The suite covers DOM parsing and serialisation, text extraction, sanitisation, a
 
 ## Contributing
 
-1. Install the .NET 8 SDK.
+1. Install the .NET 10 SDK.
 2. Restore dependencies with `dotnet restore` at the repository root.
 3. Build with `dotnet build` (or open `Tiptap.sln` in your IDE).
 4. Run `dotnet test` to ensure the suite passes.

@@ -4,6 +4,8 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiptap.Core", "src/Tiptap.Core/Tiptap.Core.csproj", "{3CD63087-2320-4110-82F6-BD7B3C7BA646}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiptap.Tests", "tests/Tiptap.Tests/Tiptap.Tests.csproj", "{9F00C668-64EF-4D4B-B1AE-DBC245BEE666}"
+EndProject
 Global
     GlobalSection(SolutionConfigurationPlatforms) = preSolution
         Debug|Any CPU = Debug|Any CPU
@@ -14,5 +16,9 @@ Global
         {3CD63087-2320-4110-82F6-BD7B3C7BA646}.Debug|Any CPU.Build.0 = Debug|Any CPU
         {3CD63087-2320-4110-82F6-BD7B3C7BA646}.Release|Any CPU.ActiveCfg = Release|Any CPU
         {3CD63087-2320-4110-82F6-BD7B3C7BA646}.Release|Any CPU.Build.0 = Release|Any CPU
+        {9F00C668-64EF-4D4B-B1AE-DBC245BEE666}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {9F00C668-64EF-4D4B-B1AE-DBC245BEE666}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {9F00C668-64EF-4D4B-B1AE-DBC245BEE666}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {9F00C668-64EF-4D4B-B1AE-DBC245BEE666}.Release|Any CPU.Build.0 = Release|Any CPU
     EndGlobalSection
 EndGlobal
