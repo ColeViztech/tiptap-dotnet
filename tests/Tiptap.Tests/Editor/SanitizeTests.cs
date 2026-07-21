@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using AngleSharp.Html.Parser;
 using Tiptap.Core.Models;
 using Tiptap.Tests;
 using EditorClass = Tiptap.Core.Editor;
@@ -52,6 +53,25 @@ public class SanitizeTests
             .Sanitize("<p>Example Text<script>alert(\"HACKED\");</script></p>") as string;
 
         Assert.Equal("<p>Example Text</p>", html);
+    }
+
+    [Fact]
+    public void MathMlIntegrationPointPayloadIsSafeAfterReparse()
+    {
+        const string payload = "<math><annotation-xml encoding=\"text/html\"><title><a encoding=\"</title><img src=x onerror=alert()>\"></annotation-xml></math>";
+        var parser = new HtmlParser();
+
+        var parsed = parser.ParseDocument(payload);
+        Assert.NotNull(parsed.QuerySelector("img"));
+
+        var sanitized = new EditorClass()
+            .Sanitize(payload) as string;
+
+        Assert.NotNull(sanitized);
+        Assert.DoesNotContain("onerror", sanitized!, StringComparison.OrdinalIgnoreCase);
+
+        var reparsed = parser.ParseDocument(sanitized);
+        Assert.Null(reparsed.QuerySelector("img[onerror]"));
     }
 
     [Fact]
